@@ -5,8 +5,6 @@ namespace NascentAfrica\Jetstrap\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use NascentAfrica\Jetstrap\Helpers;
-use NascentAfrica\Jetstrap\JetstrapFacade;
-use NascentAfrica\Jetstrap\Presets;
 
 class InstallCommand extends Command
 {
@@ -116,10 +114,6 @@ class InstallCommand extends Command
         }
 
         $this->line('');
-        $this->info('Rounding up...');
-        $this->installPreset();
-
-        $this->line('');
         $this->info('Bootstrap scaffolding swapped for livewire successfully.');
         $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
     }
@@ -199,10 +193,6 @@ class InstallCommand extends Command
         }
 
         $this->line('');
-        $this->info('Rounding up...');
-        $this->installPreset();
-
-        $this->line('');
         $this->info('Bootstrap scaffolding swapped for inertia successfully.');
         $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
     }
@@ -239,10 +229,6 @@ class InstallCommand extends Command
 
         copy(__DIR__.'/../../../../breeze/resources/views/dashboard.blade.php', resource_path('views/dashboard.blade.php'));
         copy(__DIR__.'/../../../../stubs/resources/views/welcome.blade.php', resource_path('views/welcome.blade.php'));
-
-        $this->line('');
-        $this->info('Rounding up...');
-        $this->installPreset();
 
         $this->info('Breeze scaffolding swapped successfully.');
         $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
@@ -298,159 +284,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/NavLink.vue', resource_path('js/Components/NavLink.vue'));
         copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/ValidationErrors.vue', resource_path('js/Components/ValidationErrors.vue'));
 
-        $this->line('');
-        $this->info('Rounding up...');
-        $this->installPreset();
-
         $this->info('Breeze scaffolding swapped successfully.');
         $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
-    }
-
-    /**
-     * Install third party presets.
-     *
-     * @return void
-     */
-    protected function installPreset()
-    {
-        $preset = JetstrapFacade::getPreset();
-        
-        if (!$preset) {
-            Helpers::updateNodePackages(function ($packages) {
-                return [
-                    'bootstrap' => '^5.1.0',
-                    "@popperjs/core" => "^2.5.3",
-                ] + $packages;
-            });
-
-            return;
-        }
-
-        $this->bootstrap4JetstreamPresetResources();
-
-        // Check for preset usage...
-        if ($preset) {
-            switch ($preset) {
-                case Presets::CORE_UI_3:
-                    $this->line('');
-                    $this->info('Setting up Core Ui 3.');
-                    Presets::setupCoreUi3($this->argument('stack'));
-                    break;
-                case Presets::ADMIN_LTE_3:
-                    $this->line('');
-                    $this->info('Setting up AdminLte 3.');
-                    Presets::setupAdminLte3($this->argument('stack'));
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Revert to bootstrap 4 compatible resources when using presets.
-     *
-     * @return void
-     */
-    protected function bootstrap4JetstreamPresetResources()
-    {
-        $stack = $this->argument('stack');
-
-        copy(__DIR__ . '/../../../../presets/Common/stubs/resources/js/bootstrap.js', resource_path('js/bootstrap.js'));
-        copy(__DIR__ . '/../../../../presets/Common/stubs/resources/sass/app.scss', resource_path('sass/app.scss'));
-
-        if ($stack === 'livewire') {
-            // Remove bootstrap 5 resources related to livewire.
-            copy(__DIR__ . '/../../../../presets/Common/components/checkbox.blade.php', resource_path('views/vendor/jetstream/components/checkbox.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/components/confirmation-modal.blade.php', resource_path('views/vendor/jetstream/components/confirmation-modal.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/components/confirms-password.blade.php', resource_path('views/vendor/jetstream/components/confirms-password.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/components/dialog-modal.blade.php', resource_path('views/vendor/jetstream/components/dialog-modal.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/components/dropdown.blade.php', resource_path('views/vendor/jetstream/components/dropdown.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/components/modal.blade.php', resource_path('views/vendor/jetstream/components/modal.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/components/switchable-team.blade.php', resource_path('views/vendor/jetstream/components/switchable-team.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/components/welcome.blade.php', resource_path('views/vendor/jetstream/components/welcome.blade.php'));
-            
-            copy(__DIR__ . '/../../../../presets/Common/stubs/resources/views/welcome.blade.php', resource_path('views/welcome.blade.php'));
-
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/api/api-token-manager.blade.php', resource_path('views/api/api-token-manager.blade.php'));
-
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/auth/confirm-password.blade.php', resource_path('views/auth/confirm-password.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/auth/forgot-password.blade.php', resource_path('views/auth/forgot-password.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/auth/reset-password.blade.php', resource_path('views/auth/reset-password.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/auth/two-factor-challenge.blade.php', resource_path('views/auth/two-factor-challenge.blade.php'));
-
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/profile/delete-user-form.blade.php', resource_path('views/profile/delete-user-form.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/profile/logout-other-browser-sessions-form.blade.php', resource_path('views/profile/logout-other-browser-sessions-form.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/profile/two-factor-authentication-form.blade.php', resource_path('views/profile/two-factor-authentication-form.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/profile/update-password-form.blade.php', resource_path('views/profile/update-password-form.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/profile/update-profile-information-form.blade.php', resource_path('views/profile/update-profile-information-form.blade.php'));
-
-            if ($this->option('teams')) {
-                copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/teams/delete-team-form.blade.php', resource_path('views/teams/delete-team-form.blade.php'));
-                copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/teams/team-member-manager.blade.php', resource_path('views/teams/team-member-manager.blade.php'));
-                copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/teams/create-team-form.blade.php', resource_path('views/teams/create-team-form.blade.php'));
-                copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/teams/update-team-name-form.blade.php', resource_path('views/teams/update-team-name-form.blade.php'));
-            }
-
-            copy(__DIR__ . '/../../../../presets/Common/stubs/livewire/resources/views/navigation-menu.blade.php', resource_path('views/navigation-menu.blade.php'));
-        } elseif ($stack === 'inertia') {
-
-            // Remove bootstrap 5 resources related to inertia.
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Jetstream/Checkbox.vue', resource_path('js/Jetstream/Checkbox.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Jetstream/ConfirmationModal.vue', resource_path('js/Jetstream/ConfirmationModal.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Jetstream/ConfirmsPassword.vue', resource_path('js/Jetstream/ConfirmsPassword.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Jetstream/DialogModal.vue', resource_path('js/Jetstream/DialogModal.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Jetstream/Dropdown.vue', resource_path('js/Jetstream/Dropdown.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Jetstream/Welcome.vue', resource_path('js/Jetstream/Welcome.vue'));
-
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Welcome.vue', resource_path('js/Pages/Welcome.vue'));
-
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/API/Partials/ApiTokenManager.vue', resource_path('js/Pages/API/Partials/ApiTokenManager.vue'));
-            
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Auth/ConfirmPassword.vue', resource_path('js/Pages/Auth/ConfirmPassword.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Auth/ForgotPassword.vue', resource_path('js/Pages/Auth/ForgotPassword.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Auth/Register.vue', resource_path('js/Pages/Auth/Register.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Auth/ResetPassword.vue', resource_path('js/Pages/Auth/ResetPassword.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Auth/TwoFactorChallenge.vue', resource_path('js/Pages/Auth/TwoFactorChallenge.vue'));
-
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Profile/Partials/DeleteUserForm.vue', resource_path('js/Pages/Profile/Partials/DeleteUserForm.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue', resource_path('js/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue', resource_path('js/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue', resource_path('js/Pages/Profile/Partials/UpdatePasswordForm.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue', resource_path('js/Pages/Profile/Partials/UpdateProfileInformationForm.vue'));
-
-            if ($this->option('teams')) {
-                copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Teams/Partials/CreateTeamForm.vue', resource_path('js/Pages/Teams/Partials/CreateTeamForm.vue'));
-                copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Teams/Partials/DeleteTeamForm.vue', resource_path('js/Pages/Teams/Partials/DeleteTeamForm.vue'));
-                copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Teams/Partials/TeamMemberManager.vue', resource_path('js/Pages/Teams/Partials/TeamMemberManager.vue'));
-                copy(__DIR__ . '/../../../../presets/Common/stubs/inertia/resources/js/Pages/Teams/Partials/UpdateTeamNameForm.vue', resource_path('js/Pages/Teams/Partials/UpdateTeamNameForm.vue'));
-            }
-
-        } elseif ($stack === 'breeze') {
-            copy(__DIR__ . '/../../../../presets/Common/components/dropdown.blade.php', resource_path('views/components/dropdown.blade.php'));
-
-            copy(__DIR__ . '/../../../../presets/Common/components/checkbox.blade.php', resource_path('views/components/checkbox.blade.php'));
-
-            copy(__DIR__ . '/../../../../presets/Common/breeze/resources/views/auth/confirm-password.blade.php', resource_path('views/auth/confirm-password.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/resources/views/auth/forgot-password.blade.php', resource_path('views/auth/forgot-password.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/resources/views/auth/reset-password.blade.php', resource_path('views/auth/reset-password.blade.php'));
-
-            copy(__DIR__ . '/../../../../presets/Common/breeze/resources/views/layouts/navigation.blade.php', resource_path('views/layouts/navigation.blade.php'));
-
-        } elseif ($stack === 'breeze-inertia') {
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Layouts/Authenticated.vue', resource_path('js/Layouts/Authenticated.vue'));
-
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Pages/Auth/ConfirmPassword.vue', resource_path('js/Pages/Auth/ConfirmPassword.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Pages/Auth/ForgotPassword.vue', resource_path('js/Pages/Auth/ForgotPassword.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Pages/Auth/Register.vue', resource_path('js/Pages/Auth/Register.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Pages/Auth/ResetPassword.vue', resource_path('js/Pages/Auth/ResetPassword.vue'));
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Pages/Auth/VerifyEmail.vue', resource_path('js/Pages/Auth/VerifyEmail.vue'));
-
-            copy(__DIR__ . '/../../../../presets/Common/breeze/inertia/resources/js/Pages/Welcome.vue', resource_path('js/Pages/Welcome.vue'));
-        }
     }
 }

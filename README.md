@@ -18,9 +18,6 @@ Jetstrap is a lightweight laravel 8 package that focuses on the `VIEW` side of [
     + [Finalizing The Installation](#finalizing-the-installation)
     + [Extras](#extras)
       - [Pagination](#pagination)
-  * [Presets](#presets)
-    + [Core Ui](#core-ui)
-    + [AdminLTE](#adminlte)
   * [Breeze](#breeze)
     + [Swapping Breeze resources](#swapping-breeze-resources)
     + [Swapping Breeze inertia resources](#swapping-breeze-inertia-resources)
@@ -126,96 +123,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
-    }
-}
-```
-
-
-## Presets
-
-Presets are custom third party templates built using bootstrap. We've thought about it, what are the chances that you're going to use the default template provided by Laravel or Laravel Jetstream.
-
-With the assumption you already know which way you want to go before running any type of scaffolding, so if you want to use CoreUi or AdminLte presets then the choice should be specified in your service provider (`JetstrapFacade::useCoreUi3()` or `JetstrapFacade::useAdminLte3()`) the first time you run any `swap` command.
-
-And if you change your mind after you've run a swap command and decide to use a preset, then run the `jetstrap:swap` command again.
-
-
-### Core Ui
-
-[Core Ui](https://coreui.io/) lets you save thousands of priceless hours because it offers everything you need to create modern, beautiful, and responsive applications as stated on their website.
-
-> Please visit the CoreUI [documentation](https://coreui.io/docs/getting-started/introduction/) for more details on how to use it.
-
-To use Core Ui presets, simply call the `useCoreUi3` method within your AppServiceProvider:
-
-```php
-<?php
-
-namespace App\Providers;
-
-use Illuminate\Support\ServiceProvider;
-use NascentAfrica\Jetstrap\JetstrapFacade;
-
-class AppServiceProvider extends ServiceProvider
-{
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        JetstrapFacade::useCoreUi3();
-    }
-}
-```
-
-### AdminLTE
-
-[AdminLTE](https://adminlte.io/) is an open source admin dashboard & control panel theme. Built on top of Bootstrap, AdminLTE provides a range of responsive, reusable, and commonly used components.
-
-> Please visit the AdminLTE [documentation](https://adminlte.io/themes/v3/) for more details on how to use it.
-
-To use AdminLte presets, simply call the `useAdminLte3` method within your AppServiceProvider:
-
-```php
-<?php
-
-namespace App\Providers;
-
-use Illuminate\Support\ServiceProvider;
-use NascentAfrica\Jetstrap\JetstrapFacade;
-
-class AppServiceProvider extends ServiceProvider
-{
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        JetstrapFacade::useAdminLte3();
     }
 }
 ```

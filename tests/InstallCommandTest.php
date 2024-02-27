@@ -2,8 +2,6 @@
 
 namespace NascentAfrica\Jetstrap\Tests;
 
-use NascentAfrica\Jetstrap\JetstrapFacade;
-
 class InstallCommandTest extends TestCase
 {
     /** @test */
@@ -58,57 +56,5 @@ class InstallCommandTest extends TestCase
         $this->basicTests();
         $this->basicInertiaTests();
         $this->inertiaTeamTests();
-    }
-
-    /** @test */
-    public function livewire_core_ui_swap()
-    {
-        JetstrapFacade::useCoreUi3();
-
-        // Run the make command
-        $this->artisan('jetstrap:swap livewire')
-            ->assertExitCode(0);
-
-        $this->basicTests();
-        $this->basicLivewireTests();
-    }
-
-    /** @test */
-    public function inertia_core_ui_swap()
-    {
-        JetstrapFacade::useCoreUi3();
-
-        // Run the make command
-        $this->artisan('jetstrap:swap inertia')
-            ->assertExitCode(0);
-
-        $this->basicTests();
-        $this->basicInertiaTests();
-    }
-
-    /** @test */
-    public function livewire_admin_lte_swap()
-    {
-        JetstrapFacade::useAdminLte3();
-
-        // Run the make command
-        $this->artisan('jetstrap:swap livewire')
-            ->assertExitCode(0);
-
-        $this->basicTests();
-        $this->basicLivewireTests();
-    }
-
-    /** @test */
-    public function inertia_admin_lte_swap()
-    {
-        JetstrapFacade::useAdminLte3();
-
-        // Run the make command
-        $this->artisan('jetstrap:swap inertia')
-            ->assertExitCode(0);
-
-        $this->basicTests();
-        $this->basicInertiaTests();
     }
 }
