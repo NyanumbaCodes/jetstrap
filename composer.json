@@ -28,7 +28,7 @@
   },
   "autoload": {
     "psr-4": {
-      "NascentAfrica\\Jetstrap\\": "src/NascentAfrica/Jetstrap/"
+      "NascentAfrica\\Jetstrap\\": "src/Jetstrap/"
     },
     "files": [
       "src/helpers.php"

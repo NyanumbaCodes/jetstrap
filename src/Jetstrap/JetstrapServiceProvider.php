@@ -13,7 +13,7 @@ class JetstrapServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('jetstrap', function ($app) {
+        $this->app->bind('jetstrap', function () {
             return new Jetstrap;
         });
     }
@@ -41,7 +41,7 @@ class JetstrapServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../../../resources/views' => resource_path('views/vendor/jetstream'),
+            __DIR__ . '/../../resources/views' => resource_path('views/vendor/jetstream'),
         ], 'jetstrap-views');
     }
 
