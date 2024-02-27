@@ -5,6 +5,7 @@ namespace NascentAfrica\Jetstrap\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use NascentAfrica\Jetstrap\Helpers;
+use NascentAfrica\Jetstrap\Jetstrap;
 
 class InstallCommand extends Command
 {
@@ -31,25 +32,26 @@ class InstallCommand extends Command
     public function handle()
     {
         $this->info('Performing swap...');
+        $file = new Filesystem;
 
         // Remove Tailwind Configuration...
-        if ((new Filesystem)->exists(base_path('tailwind.config.js'))) {
-            (new Filesystem)->delete(base_path('tailwind.config.js'));
+        if ($file->exists(base_path('tailwind.config.js'))) {
+            $file->delete(base_path('tailwind.config.js'));
         }
 
         // Bootstrap Configuration...
-        copy(__DIR__.'/../../../../stubs/webpack.mix.js', base_path('webpack.mix.js'));
-        copy(__DIR__.'/../../../../stubs/webpack.config.js', base_path('webpack.config.js'));
+        copy(jet_stubs_path('webpack.mix.js'), base_path('webpack.mix.js'));
+        copy(jet_stubs_path('webpack.config.js'), base_path('webpack.config.js'));
 
         // Assets...
-        (new Filesystem)->deleteDirectory(resource_path('css'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('sass'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/resources/js', resource_path('js'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/resources/sass', resource_path('sass'));
+        $file->deleteDirectory(resource_path('css'));
+        $file->ensureDirectoryExists(resource_path('sass'));
+        $file->ensureDirectoryExists(resource_path('js'));
+        $file->ensureDirectoryExists(resource_path('views'));
+        $file->copyDirectory(jet_stubs_resources_path('js'), resource_path('js'));
+        $file->copyDirectory(jet_stubs_resources_path('sass'), resource_path('sass'));
 
-        copy(__DIR__.'/../../../../stubs/resources/views/welcome.blade.php', resource_path('views/welcome.blade.php'));
+        copy(jet_stubs_resources_path(Jetstrap::VIEWS_WELCOME_FILE), resource_path(Jetstrap::VIEWS_WELCOME_FILE));
 
         Helpers::updateNodePackages(function ($packages) {
             return [
@@ -57,20 +59,22 @@ class InstallCommand extends Command
             ] + $packages;
         });
 
-        // Install Stack...
-        if ($this->argument('stack') === 'livewire') {
-
-            $this->swapJetstreamLivewireStack();
-
-        } elseif ($this->argument('stack') === 'inertia') {
-
-            $this->swapJetstreamInertiaStack();
-        } elseif ($this->argument('stack') === 'breeze') {
-
-            $this->swapBreezeStack();
-        } elseif ($this->argument('stack') === 'breeze-inertia') {
-
-            $this->swapBreezeInertiaStack();
+        switch ($this->argument('stack')) {
+            case 'livewire':
+                $this->swapJetstreamLivewireStack($file);
+                break;
+            case 'inertia':
+                $this->swapJetstreamInertiaStack($file);
+                break;
+            case 'breeze':
+                $this->swapBreezeStack($file);
+                break;
+            case 'breeze-inertia':
+                $this->swapBreezeInertiaStack($file);
+                break;
+            default:
+                $this->error('Stack not supported. Please use "livewire", "inertia", "breeze" or "breeze-inertia".');
+                break;
         }
     }
 
@@ -79,43 +83,43 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function swapJetstreamLivewireStack()
+    protected function swapJetstreamLivewireStack(Filesystem $file)
     {
         $this->line('');
         $this->info('Installing livewire stack...');
 
         // Directories...
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/api'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
+        $file->ensureDirectoryExists(resource_path('views/api'));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::VIEWS_AUTH_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::VIEWS_LAYOUTS_DIR));
+        $file->ensureDirectoryExists(resource_path('views/profile'));
 
         // Layouts
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/livewire/resources/views/layouts', resource_path('views/layouts'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/livewire/resources/views/api', resource_path('views/api'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/livewire/resources/views/profile', resource_path('views/profile'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/livewire/resources/views/auth', resource_path('views/auth'));
+        $file->copyDirectory(jet_stubs_livewire('layouts'), resource_path(Jetstrap::VIEWS_LAYOUTS_DIR));
+        $file->copyDirectory(jet_stubs_livewire('api'), resource_path('views/api'));
+        $file->copyDirectory(jet_stubs_livewire('profile'), resource_path('views/profile'));
+        $file->copyDirectory(jet_stubs_livewire('auth'), resource_path(Jetstrap::VIEWS_AUTH_DIR));
 
         // Single Blade Views...
-        copy(__DIR__.'/../../../../stubs/livewire/resources/views/dashboard.blade.php', resource_path('views/dashboard.blade.php'));
-        copy(__DIR__.'/../../../../stubs/livewire/resources/views/navigation-menu.blade.php', resource_path('views/navigation-menu.blade.php'));
-        copy(__DIR__.'/../../../../stubs/livewire/resources/views/terms.blade.php', resource_path('views/terms.blade.php'));
-        copy(__DIR__.'/../../../../stubs/livewire/resources/views/policy.blade.php', resource_path('views/policy.blade.php'));
+        copy(jet_stubs_livewire('dashboard.blade.php'), resource_path(Jetstrap::VIEWS_DASHBOARD_FILE));
+        copy(jet_stubs_livewire('navigation-menu.blade.php'), resource_path('views/navigation-menu.blade.php'));
+        copy(jet_stubs_livewire('terms.blade.php'), resource_path('views/terms.blade.php'));
+        copy(jet_stubs_livewire('policy.blade.php'), resource_path('views/policy.blade.php'));
 
         // Assets...
-        (new Filesystem)->copy(__DIR__.'/../../../../stubs/resources/js/app.js', resource_path('js/app.js'));
+        $file->copy(jet_stubs_resources_path(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
 
         // Publish...
         $this->callSilent('vendor:publish', ['--tag' => 'jetstrap-views', '--force' => true]);
 
         // Teams...
         if ($this->option('teams')) {
-            $this->swapJetstreamLivewireTeamStack();
+            $this->swapJetstreamLivewireTeamStack($file);
         }
 
         $this->line('');
         $this->info('Bootstrap scaffolding swapped for livewire successfully.');
-        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        $this->comment(Jetstrap::RUN_NPM_MESSAGE);
     }
 
     /**
@@ -123,12 +127,12 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function swapJetstreamLivewireTeamStack()
+    protected function swapJetstreamLivewireTeamStack(Filesystem $file)
     {
         // Directories...
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/teams'));
+        $file->ensureDirectoryExists(resource_path('views/teams'));
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/livewire/resources/views/teams', resource_path('views/teams'));
+        $file->copyDirectory(jet_stubs_livewire('teams'), resource_path('views/teams'));
     }
 
     /**
@@ -136,7 +140,7 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function swapJetstreamInertiaStack()
+    protected function swapJetstreamInertiaStack(Filesystem $file)
     {
         $this->line('');
         $this->info('Installing inertia stack...');
@@ -154,47 +158,57 @@ class InstallCommand extends Command
         });
 
         // Necessary for vue compilation
-        copy(__DIR__.'/../../../../stubs/inertia/webpack.mix.js', base_path('webpack.mix.js'));
+        copy(jet_stubs_path('inertia/webpack.mix.js'), base_path('webpack.mix.js'));
 
         // Blade Views...
-        copy(__DIR__.'/../../../../stubs/inertia/resources/views/app.blade.php', resource_path('views/app.blade.php'));
+        copy(jet_stubs_inertia_resources(Jetstrap::VIEWS_APP_FILE), resource_path(Jetstrap::VIEWS_APP_FILE));
 
         // Assets...
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/app.js', resource_path('js/app.js'));
+        copy(jet_stubs_inertia_resources(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
 
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Jetstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Layouts'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/API'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Auth'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views'));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_JETSTREAM_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_LAYOUT_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_API_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_AUTH_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_PROFILE_DIR));
+        $file->ensureDirectoryExists(resource_path('views'));
 
-        if (file_exists(resource_path('views/welcome.blade.php'))) {
-            unlink(resource_path('views/welcome.blade.php'));
+        if (file_exists(resource_path(Jetstrap::VIEWS_WELCOME_FILE))) {
+            unlink(resource_path(Jetstrap::VIEWS_WELCOME_FILE));
         }
 
         // Inertia Pages...
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/Dashboard.vue', resource_path('js/Pages/Dashboard.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/PrivacyPolicy.vue', resource_path('js/Pages/PrivacyPolicy.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/TermsOfService.vue', resource_path('js/Pages/TermsOfService.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/Welcome.vue', resource_path('js/Pages/Welcome.vue'));
+        copy(jet_stubs_inertia_resources('js/Pages/Dashboard.vue'), resource_path('js/Pages/Dashboard.vue'));
+        copy(jet_stubs_inertia_resources('js/Pages/PrivacyPolicy.vue'), resource_path('js/Pages/PrivacyPolicy.vue'));
+        copy(jet_stubs_inertia_resources('js/Pages/TermsOfService.vue'), resource_path('js/Pages/TermsOfService.vue'));
+        copy(jet_stubs_inertia_resources('js/Pages/Welcome.vue'), resource_path('js/Pages/Welcome.vue'));
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream', resource_path('js/Jetstream'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/inertia/resources/js/Layouts', resource_path('js/Layouts'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/API', resource_path('js/Pages/API'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/Auth', resource_path('js/Pages/Auth'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/Profile', resource_path('js/Pages/Profile'));
+        $file->copyDirectory(
+            jet_stubs_inertia_resources(Jetstrap::JS_JETSTREAM_DIR), resource_path(Jetstrap::JS_JETSTREAM_DIR)
+        );
+        $file->copyDirectory(
+            jet_stubs_inertia_resources(Jetstrap::JS_LAYOUT_DIR), resource_path(Jetstrap::JS_LAYOUT_DIR)
+        );
+        $file->copyDirectory(
+            jet_stubs_inertia_resources(Jetstrap::JS_PAGES_API_DIR), resource_path(Jetstrap::JS_PAGES_API_DIR)
+        );
+        $file->copyDirectory(
+            jet_stubs_inertia_resources(Jetstrap::JS_PAGES_AUTH_DIR), resource_path(Jetstrap::JS_PAGES_AUTH_DIR)
+        );
+        $file->copyDirectory(
+            jet_stubs_inertia_resources(Jetstrap::JS_PAGES_PROFILE_DIR), resource_path(Jetstrap::JS_PAGES_PROFILE_DIR)
+        );
 
 
         // Teams...
         if ($this->option('teams')) {
-            $this->swapJetstreamInertiaTeamStack();
+            $this->swapJetstreamInertiaTeamStack($file);
         }
 
         $this->line('');
         $this->info('Bootstrap scaffolding swapped for inertia successfully.');
-        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        $this->comment(Jetstrap::RUN_NPM_MESSAGE);
     }
 
     /**
@@ -202,13 +216,13 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function swapJetstreamInertiaTeamStack()
+    protected function swapJetstreamInertiaTeamStack(Filesystem $file)
     {
         // Directories...
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_PROFILE_DIR));
 
         // Pages...
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/inertia/resources/js/Pages/Teams', resource_path('js/Pages/Teams'));
+        $file->copyDirectory(jet_stubs_inertia_resources('js/Pages/Teams'), resource_path('js/Pages/Teams'));
     }
 
     /**
@@ -216,22 +230,29 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function swapBreezeStack()
+    protected function swapBreezeStack(Filesystem $file)
     {
         // Views...
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::VIEWS_AUTH_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::VIEWS_LAYOUTS_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_COMPONENTS_DIR));
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../breeze/resources/views/auth', resource_path('views/auth'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../breeze/resources/views/layouts', resource_path('views/layouts'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../breeze/resources/views/components', resource_path('views/components'));
+        $file->copyDirectory(
+            jet_breeze_resources_path(Jetstrap::VIEWS_AUTH_DIR), resource_path(Jetstrap::VIEWS_AUTH_DIR)
+        );
+        $file->copyDirectory(
+            jet_breeze_resources_path(Jetstrap::VIEWS_LAYOUTS_DIR), resource_path(Jetstrap::VIEWS_LAYOUTS_DIR)
+        );
+        $file->copyDirectory(
+            jet_breeze_resources_path(Jetstrap::JS_COMPONENTS_DIR),
+            resource_path(Jetstrap::JS_COMPONENTS_DIR)
+        );
 
-        copy(__DIR__.'/../../../../breeze/resources/views/dashboard.blade.php', resource_path('views/dashboard.blade.php'));
-        copy(__DIR__.'/../../../../stubs/resources/views/welcome.blade.php', resource_path('views/welcome.blade.php'));
+        copy(jet_breeze_resources_path(Jetstrap::VIEWS_DASHBOARD_FILE), resource_path(Jetstrap::VIEWS_DASHBOARD_FILE));
+        copy(jet_stubs_resources_path(Jetstrap::VIEWS_WELCOME_FILE), resource_path(Jetstrap::VIEWS_WELCOME_FILE));
 
         $this->info('Breeze scaffolding swapped successfully.');
-        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        $this->comment(Jetstrap::RUN_NPM_MESSAGE);
     }
 
     /**
@@ -239,7 +260,7 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function swapBreezeInertiaStack()
+    protected function swapBreezeInertiaStack(Filesystem $file)
     {
         // NPM Packages...
         Helpers::updateNodePackages(function ($packages) {
@@ -254,37 +275,46 @@ class InstallCommand extends Command
         });
 
         // Views...
-        copy(__DIR__.'/../../../../stubs/inertia/resources/views/app.blade.php', resource_path('views/app.blade.php'));
+        copy(jet_stubs_inertia_resources(Jetstrap::VIEWS_APP_FILE), resource_path(Jetstrap::VIEWS_APP_FILE));
 
-        copy(__DIR__.'/../../../../stubs/inertia/webpack.mix.js', base_path('webpack.mix.js'));
+        copy(jet_stubs_path('inertia/webpack.mix.js'), base_path('webpack.mix.js'));
 
         // Assets...
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/app.js', resource_path('js/app.js'));
+        copy(jet_stubs_inertia_resources(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
 
         // Components + Pages...
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Components'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Layouts'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages'));
+        $file->ensureDirectoryExists(resource_path('js/Components'));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_LAYOUT_DIR));
+        $file->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_DIR));
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../breeze/inertia/resources/js/Components', resource_path('js/Components'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../breeze/inertia/resources/js/Layouts', resource_path('js/Layouts'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../breeze/inertia/resources/js/Pages', resource_path('js/Pages'));
+        $file->copyDirectory(
+            jet_breeze_inertia_path('resources/js/Components'),
+            resource_path('js/Components')
+        );
+        $file->copyDirectory(jet_breeze_inertia_path('resources/js/Layouts'), resource_path(Jetstrap::JS_LAYOUT_DIR));
+        $file->copyDirectory(jet_breeze_inertia_path('resources/js/Pages'), resource_path(Jetstrap::JS_PAGES_DIR));
 
-        if ((new Filesystem)->exists(resource_path('js/Components/ResponsiveNavLink.vue'))) {
-            (new Filesystem)->delete(resource_path('js/Components/ResponsiveNavLink.vue'));
+        if ($file->exists(resource_path('js/Components/ResponsiveNavLink.vue'))) {
+            $file->delete(resource_path('js/Components/ResponsiveNavLink.vue'));
         }
 
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/Button.vue', resource_path('js/Components/Button.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/Checkbox.vue', resource_path('js/Components/Checkbox.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/Dropdown.vue', resource_path('js/Components/Dropdown.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/DropdownLink.vue', resource_path('js/Components/DropdownLink.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/Input.vue', resource_path('js/Components/Input.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/InputError.vue', resource_path('js/Components/InputError.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/Label.vue', resource_path('js/Components/Label.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/NavLink.vue', resource_path('js/Components/NavLink.vue'));
-        copy(__DIR__.'/../../../../stubs/inertia/resources/js/Jetstream/ValidationErrors.vue', resource_path('js/Components/ValidationErrors.vue'));
+        copy(jet_stubs_inertia_resources('js/Jetstream/Button.vue'), resource_path('js/Components/Button.vue'));
+        copy(jet_stubs_inertia_resources('js/Jetstream/Checkbox.vue'), resource_path('js/Components/Checkbox.vue'));
+        copy(jet_stubs_inertia_resources('js/Jetstream/Dropdown.vue'), resource_path('js/Components/Dropdown.vue'));
+        copy(jet_stubs_inertia_resources(
+            'js/Jetstream/DropdownLink.vue'),
+            resource_path('js/Components/DropdownLink.vue')
+        );
+        copy(jet_stubs_inertia_resources('js/Jetstream/Input.vue'), resource_path('js/Components/Input.vue'));
+        copy(jet_stubs_inertia_resources('js/Jetstream/InputError.vue'), resource_path('js/Components/InputError.vue'));
+        copy(jet_stubs_inertia_resources('js/Jetstream/Label.vue'), resource_path('js/Components/Label.vue'));
+        copy(jet_stubs_inertia_resources('js/Jetstream/NavLink.vue'), resource_path('js/Components/NavLink.vue'));
+        copy(
+            jet_stubs_inertia_resources('js/Jetstream/ValidationErrors.vue'),
+            resource_path('js/Components/ValidationErrors.vue')
+        );
 
         $this->info('Breeze scaffolding swapped successfully.');
-        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        $this->comment(Jetstrap::RUN_NPM_MESSAGE);
     }
 }
