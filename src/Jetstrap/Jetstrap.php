@@ -11,7 +11,7 @@ class Jetstrap
 
     const VIEWS_LAYOUTS_DIR = 'views/layouts';
 
-    const JS_JETSTREAM_DIR = 'js/Jetstream';
+    const JS_JETSTREAM_COMP_DIR = 'js/Components';
 
     const JS_LAYOUT_DIR = 'js/Layouts';
 

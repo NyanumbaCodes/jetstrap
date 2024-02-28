@@ -3,7 +3,6 @@
 namespace NascentAfrica\Jetstrap\Console\SwapHandlers;
 
 use Illuminate\Support\Facades\Artisan;
-use NascentAfrica\Jetstrap\Helpers;
 use NascentAfrica\Jetstrap\Jetstrap;
 use NascentAfrica\Jetstrap\JetstrapFacade;
 
@@ -55,19 +54,28 @@ class JetstreamHandler extends AbstractHandler
         $this->getFile()->ensureDirectoryExists(resource_path('views/profile'));
 
         // Layouts
-        $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('layouts'), resource_path(Jetstrap::VIEWS_LAYOUTS_DIR));
+        $this->getFile()->copyDirectory(
+            Jetstrap::jetstreamLivewire('layouts'),
+            resource_path(Jetstrap::VIEWS_LAYOUTS_DIR)
+        );
         $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('api'), resource_path('views/api'));
         $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('profile'), resource_path('views/profile'));
         $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('auth'), resource_path(Jetstrap::VIEWS_AUTH_DIR));
 
         // Single Blade Views...
         copy(Jetstrap::jetstreamLivewire('dashboard.blade.php'), resource_path(Jetstrap::VIEWS_DASHBOARD_FILE));
-        copy(Jetstrap::jetstreamLivewire('navigation-menu.blade.php'), resource_path('views/navigation-menu.blade.php'));
+        copy(
+            Jetstrap::jetstreamLivewire('navigation-menu.blade.php'),
+            resource_path('views/navigation-menu.blade.php')
+        );
         copy(Jetstrap::jetstreamLivewire('terms.blade.php'), resource_path('views/terms.blade.php'));
         copy(Jetstrap::jetstreamLivewire('policy.blade.php'), resource_path('views/policy.blade.php'));
 
         // Assets...
-        $this->getFile()->copy(Jetstrap::jetstreamResourcesPath(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
+        $this->getFile()->copy(
+            Jetstrap::jetstreamResourcesPath(Jetstrap::JS_APP_FILE),
+            resource_path(Jetstrap::JS_APP_FILE)
+        );
 
         // Publish...
         Artisan::call('vendor:publish', ['--tag' => 'jetstrap-views', '--force' => true]);
@@ -119,7 +127,7 @@ class JetstreamHandler extends AbstractHandler
         // Assets...
         copy(Jetstrap::jetstreamInertiaResources(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
 
-        $this->getFile()->ensureDirectoryExists(resource_path(Jetstrap::JS_JETSTREAM_DIR));
+        $this->getFile()->ensureDirectoryExists(resource_path(Jetstrap::JS_JETSTREAM_COMP_DIR));
         $this->getFile()->ensureDirectoryExists(resource_path(Jetstrap::JS_LAYOUT_DIR));
         $this->getFile()->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_DIR));
         $this->getFile()->ensureDirectoryExists(resource_path(Jetstrap::JS_PAGES_API_DIR));
@@ -142,7 +150,8 @@ class JetstreamHandler extends AbstractHandler
         copy(Jetstrap::jetstreamInertiaResources('js/Pages/Welcome.vue'), resource_path('js/Pages/Welcome.vue'));
 
         $this->getFile()->copyDirectory(
-            Jetstrap::jetstreamInertiaResources(Jetstrap::JS_JETSTREAM_DIR), resource_path(Jetstrap::JS_JETSTREAM_DIR)
+            Jetstrap::jetstreamInertiaResources(Jetstrap::JS_JETSTREAM_COMP_DIR),
+            resource_path(Jetstrap::JS_JETSTREAM_COMP_DIR)
         );
         $this->getFile()->copyDirectory(
             Jetstrap::jetstreamInertiaResources(Jetstrap::JS_LAYOUT_DIR), resource_path(Jetstrap::JS_LAYOUT_DIR)

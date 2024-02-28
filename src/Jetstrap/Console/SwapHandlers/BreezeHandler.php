@@ -121,30 +121,30 @@ class BreezeHandler extends AbstractHandler
             $file->delete(resource_path('js/Components/ResponsiveNavLink.vue'));
         }
 
-        copy(Jetstrap::jetstreamInertiaResources('js/Jetstream/Button.vue'), resource_path('js/Components/Button.vue'));
+        copy(Jetstrap::jetstreamInertiaResources('js/Components/Button.vue'), resource_path('js/Components/Button.vue'));
         copy(
-            Jetstrap::jetstreamInertiaResources('js/Jetstream/Checkbox.vue'),
+            Jetstrap::jetstreamInertiaResources('js/Components/Checkbox.vue'),
             resource_path('js/Components/Checkbox.vue')
         );
         copy(
-            Jetstrap::jetstreamInertiaResources('js/Jetstream/Dropdown.vue'),
+            Jetstrap::jetstreamInertiaResources('js/Components/Dropdown.vue'),
             resource_path('js/Components/Dropdown.vue')
         );
         copy(
-            Jetstrap::jetstreamInertiaResources('js/Jetstream/DropdownLink.vue'),
+            Jetstrap::jetstreamInertiaResources('js/Components/DropdownLink.vue'),
             resource_path('js/Components/DropdownLink.vue')
         );
-        copy(Jetstrap::jetstreamInertiaResources('js/Jetstream/Input.vue'), resource_path('js/Components/Input.vue'));
+        copy(Jetstrap::jetstreamInertiaResources('js/Components/Input.vue'), resource_path('js/Components/Input.vue'));
         copy(Jetstrap::jetstreamInertiaResources(
-            'js/Jetstream/InputError.vue'),
+            'js/Components/InputError.vue'),
             resource_path('js/Components/InputError.vue'));
-        copy(Jetstrap::jetstreamInertiaResources('js/Jetstream/Label.vue'), resource_path('js/Components/Label.vue'));
+        copy(Jetstrap::jetstreamInertiaResources('js/Components/Label.vue'), resource_path('js/Components/Label.vue'));
         copy(
-            Jetstrap::jetstreamInertiaResources('js/Jetstream/NavLink.vue'),
+            Jetstrap::jetstreamInertiaResources('js/Components/NavLink.vue'),
             resource_path('js/Components/NavLink.vue')
         );
         copy(
-            Jetstrap::jetstreamInertiaResources('js/Jetstream/ValidationErrors.vue'),
+            Jetstrap::jetstreamInertiaResources('js/Components/ValidationErrors.vue'),
             resource_path('js/Components/ValidationErrors.vue')
         );
     }
