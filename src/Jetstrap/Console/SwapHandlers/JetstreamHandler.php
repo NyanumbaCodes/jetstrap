@@ -55,19 +55,19 @@ class JetstreamHandler extends AbstractHandler
         $this->getFile()->ensureDirectoryExists(resource_path('views/profile'));
 
         // Layouts
-        $this->getFile()->copyDirectory(Jetstrap::stubsLivewire('layouts'), resource_path(Jetstrap::VIEWS_LAYOUTS_DIR));
-        $this->getFile()->copyDirectory(Jetstrap::stubsLivewire('api'), resource_path('views/api'));
-        $this->getFile()->copyDirectory(Jetstrap::stubsLivewire('profile'), resource_path('views/profile'));
-        $this->getFile()->copyDirectory(Jetstrap::stubsLivewire('auth'), resource_path(Jetstrap::VIEWS_AUTH_DIR));
+        $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('layouts'), resource_path(Jetstrap::VIEWS_LAYOUTS_DIR));
+        $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('api'), resource_path('views/api'));
+        $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('profile'), resource_path('views/profile'));
+        $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('auth'), resource_path(Jetstrap::VIEWS_AUTH_DIR));
 
         // Single Blade Views...
-        copy(Jetstrap::stubsLivewire('dashboard.blade.php'), resource_path(Jetstrap::VIEWS_DASHBOARD_FILE));
-        copy(Jetstrap::stubsLivewire('navigation-menu.blade.php'), resource_path('views/navigation-menu.blade.php'));
-        copy(Jetstrap::stubsLivewire('terms.blade.php'), resource_path('views/terms.blade.php'));
-        copy(Jetstrap::stubsLivewire('policy.blade.php'), resource_path('views/policy.blade.php'));
+        copy(Jetstrap::jetstreamLivewire('dashboard.blade.php'), resource_path(Jetstrap::VIEWS_DASHBOARD_FILE));
+        copy(Jetstrap::jetstreamLivewire('navigation-menu.blade.php'), resource_path('views/navigation-menu.blade.php'));
+        copy(Jetstrap::jetstreamLivewire('terms.blade.php'), resource_path('views/terms.blade.php'));
+        copy(Jetstrap::jetstreamLivewire('policy.blade.php'), resource_path('views/policy.blade.php'));
 
         // Assets...
-        $this->getFile()->copy(Jetstrap::stubsResourcesPath(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
+        $this->getFile()->copy(Jetstrap::jetstreamResourcesPath(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
 
         // Publish...
         Artisan::call('vendor:publish', ['--tag' => 'jetstrap-views', '--force' => true]);
@@ -88,7 +88,7 @@ class JetstreamHandler extends AbstractHandler
         // Directories...
         $this->getFile()->ensureDirectoryExists(resource_path('views/teams'));
 
-        $this->getFile()->copyDirectory(Jetstrap::stubsLivewire('teams'), resource_path('views/teams'));
+        $this->getFile()->copyDirectory(Jetstrap::jetstreamLivewire('teams'), resource_path('views/teams'));
     }
 
     /**
@@ -111,13 +111,13 @@ class JetstreamHandler extends AbstractHandler
         });
 
         // Necessary for vue compilation
-        copy(Jetstrap::stubsPath('inertia/webpack.mix.js'), base_path('webpack.mix.js'));
+        copy(Jetstrap::jetstreamPath('inertia/webpack.mix.js'), base_path('webpack.mix.js'));
 
         // Blade Views...
-        copy(Jetstrap::stubsInertiaResources(Jetstrap::VIEWS_APP_FILE), resource_path(Jetstrap::VIEWS_APP_FILE));
+        copy(Jetstrap::jetstreamInertiaResources(Jetstrap::VIEWS_APP_FILE), resource_path(Jetstrap::VIEWS_APP_FILE));
 
         // Assets...
-        copy(Jetstrap::stubsInertiaResources(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
+        copy(Jetstrap::jetstreamInertiaResources(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
 
         $this->getFile()->ensureDirectoryExists(resource_path(Jetstrap::JS_JETSTREAM_DIR));
         $this->getFile()->ensureDirectoryExists(resource_path(Jetstrap::JS_LAYOUT_DIR));
@@ -132,29 +132,29 @@ class JetstreamHandler extends AbstractHandler
         }
 
         // Inertia Pages...
-        copy(Jetstrap::stubsInertiaResources('js/Pages/Dashboard.vue'), resource_path('js/Pages/Dashboard.vue'));
-        copy(Jetstrap::stubsInertiaResources(
+        copy(Jetstrap::jetstreamInertiaResources('js/Pages/Dashboard.vue'), resource_path('js/Pages/Dashboard.vue'));
+        copy(Jetstrap::jetstreamInertiaResources(
             'js/Pages/PrivacyPolicy.vue'),
             resource_path('js/Pages/PrivacyPolicy.vue'));
-        copy(Jetstrap::stubsInertiaResources(
+        copy(Jetstrap::jetstreamInertiaResources(
             'js/Pages/TermsOfService.vue'),
             resource_path('js/Pages/TermsOfService.vue'));
-        copy(Jetstrap::stubsInertiaResources('js/Pages/Welcome.vue'), resource_path('js/Pages/Welcome.vue'));
+        copy(Jetstrap::jetstreamInertiaResources('js/Pages/Welcome.vue'), resource_path('js/Pages/Welcome.vue'));
 
         $this->getFile()->copyDirectory(
-            Jetstrap::stubsInertiaResources(Jetstrap::JS_JETSTREAM_DIR), resource_path(Jetstrap::JS_JETSTREAM_DIR)
+            Jetstrap::jetstreamInertiaResources(Jetstrap::JS_JETSTREAM_DIR), resource_path(Jetstrap::JS_JETSTREAM_DIR)
         );
         $this->getFile()->copyDirectory(
-            Jetstrap::stubsInertiaResources(Jetstrap::JS_LAYOUT_DIR), resource_path(Jetstrap::JS_LAYOUT_DIR)
+            Jetstrap::jetstreamInertiaResources(Jetstrap::JS_LAYOUT_DIR), resource_path(Jetstrap::JS_LAYOUT_DIR)
         );
         $this->getFile()->copyDirectory(
-            Jetstrap::stubsInertiaResources(Jetstrap::JS_PAGES_API_DIR), resource_path(Jetstrap::JS_PAGES_API_DIR)
+            Jetstrap::jetstreamInertiaResources(Jetstrap::JS_PAGES_API_DIR), resource_path(Jetstrap::JS_PAGES_API_DIR)
         );
         $this->getFile()->copyDirectory(
-            Jetstrap::stubsInertiaResources(Jetstrap::JS_PAGES_AUTH_DIR), resource_path(Jetstrap::JS_PAGES_AUTH_DIR)
+            Jetstrap::jetstreamInertiaResources(Jetstrap::JS_PAGES_AUTH_DIR), resource_path(Jetstrap::JS_PAGES_AUTH_DIR)
         );
         $this->getFile()->copyDirectory(
-            Jetstrap::stubsInertiaResources(
+            Jetstrap::jetstreamInertiaResources(
                 Jetstrap::JS_PAGES_PROFILE_DIR),
             resource_path(Jetstrap::JS_PAGES_PROFILE_DIR)
         );
@@ -177,7 +177,7 @@ class JetstreamHandler extends AbstractHandler
 
         // Pages...
         $this->getFile()->copyDirectory(
-            Jetstrap::stubsInertiaResources('js/Pages/Teams'),
+            Jetstrap::jetstreamInertiaResources('js/Pages/Teams'),
             resource_path('js/Pages/Teams'));
     }
 }

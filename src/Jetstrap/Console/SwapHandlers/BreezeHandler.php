@@ -69,7 +69,10 @@ class BreezeHandler extends AbstractHandler
         copy(Jetstrap::breezeResourcesPath(
             Jetstrap::VIEWS_DASHBOARD_FILE),
             resource_path(Jetstrap::VIEWS_DASHBOARD_FILE));
-        copy(Jetstrap::stubsResourcesPath(Jetstrap::VIEWS_WELCOME_FILE), resource_path(Jetstrap::VIEWS_WELCOME_FILE));
+        copy(
+            Jetstrap::jetstreamResourcesPath(Jetstrap::VIEWS_WELCOME_FILE),
+            resource_path(Jetstrap::VIEWS_WELCOME_FILE)
+        );
     }
 
     /**
@@ -92,12 +95,12 @@ class BreezeHandler extends AbstractHandler
         });
 
         // Views...
-        copy(Jetstrap::stubsInertiaResources(Jetstrap::VIEWS_APP_FILE), resource_path(Jetstrap::VIEWS_APP_FILE));
+        copy(Jetstrap::jetstreamInertiaResources(Jetstrap::VIEWS_APP_FILE), resource_path(Jetstrap::VIEWS_APP_FILE));
 
-        copy(Jetstrap::stubsPath('inertia/webpack.mix.js'), base_path('webpack.mix.js'));
+        copy(Jetstrap::jetstreamPath('inertia/webpack.mix.js'), base_path('webpack.mix.js'));
 
         // Assets...
-        copy(Jetstrap::stubsInertiaResources(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
+        copy(Jetstrap::jetstreamInertiaResources(Jetstrap::JS_APP_FILE), resource_path(Jetstrap::JS_APP_FILE));
 
         // Components + Pages...
         $file->ensureDirectoryExists(resource_path('js/Components'));
@@ -118,21 +121,30 @@ class BreezeHandler extends AbstractHandler
             $file->delete(resource_path('js/Components/ResponsiveNavLink.vue'));
         }
 
-        copy(Jetstrap::stubsInertiaResources('js/Jetstream/Button.vue'), resource_path('js/Components/Button.vue'));
-        copy(Jetstrap::stubsInertiaResources('js/Jetstream/Checkbox.vue'), resource_path('js/Components/Checkbox.vue'));
-        copy(Jetstrap::stubsInertiaResources('js/Jetstream/Dropdown.vue'), resource_path('js/Components/Dropdown.vue'));
-        copy(Jetstrap::stubsInertiaResources(
-            'js/Jetstream/DropdownLink.vue'),
+        copy(Jetstrap::jetstreamInertiaResources('js/Jetstream/Button.vue'), resource_path('js/Components/Button.vue'));
+        copy(
+            Jetstrap::jetstreamInertiaResources('js/Jetstream/Checkbox.vue'),
+            resource_path('js/Components/Checkbox.vue')
+        );
+        copy(
+            Jetstrap::jetstreamInertiaResources('js/Jetstream/Dropdown.vue'),
+            resource_path('js/Components/Dropdown.vue')
+        );
+        copy(
+            Jetstrap::jetstreamInertiaResources('js/Jetstream/DropdownLink.vue'),
             resource_path('js/Components/DropdownLink.vue')
         );
-        copy(Jetstrap::stubsInertiaResources('js/Jetstream/Input.vue'), resource_path('js/Components/Input.vue'));
-        copy(Jetstrap::stubsInertiaResources(
+        copy(Jetstrap::jetstreamInertiaResources('js/Jetstream/Input.vue'), resource_path('js/Components/Input.vue'));
+        copy(Jetstrap::jetstreamInertiaResources(
             'js/Jetstream/InputError.vue'),
             resource_path('js/Components/InputError.vue'));
-        copy(Jetstrap::stubsInertiaResources('js/Jetstream/Label.vue'), resource_path('js/Components/Label.vue'));
-        copy(Jetstrap::stubsInertiaResources('js/Jetstream/NavLink.vue'), resource_path('js/Components/NavLink.vue'));
+        copy(Jetstrap::jetstreamInertiaResources('js/Jetstream/Label.vue'), resource_path('js/Components/Label.vue'));
         copy(
-            Jetstrap::stubsInertiaResources('js/Jetstream/ValidationErrors.vue'),
+            Jetstrap::jetstreamInertiaResources('js/Jetstream/NavLink.vue'),
+            resource_path('js/Components/NavLink.vue')
+        );
+        copy(
+            Jetstrap::jetstreamInertiaResources('js/Jetstream/ValidationErrors.vue'),
             resource_path('js/Components/ValidationErrors.vue')
         );
     }

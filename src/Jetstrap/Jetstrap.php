@@ -71,20 +71,24 @@ class Jetstrap
      */
     public static function breezeResourcesPath(string $path = ''): string
     {
-        return self::basePath(
-            'breeze'
-            .DIRECTORY_SEPARATOR
-            .'resources'
+        return self::breezePath(
+            'resources'
             .($path ? DIRECTORY_SEPARATOR.$path : $path)
         );
     }
 
     public static function breezeInertiaPath(string $path = ''): string
     {
-        return self::basePath(
+        return self::breezePath(
+            'inertia'
+            .($path ? DIRECTORY_SEPARATOR.$path : $path)
+        );
+    }
+
+    public static function breezePath(string $path = ''): string
+    {
+        return self::stubsPath(
             'breeze'
-            .DIRECTORY_SEPARATOR
-            .'inertia'
             .($path ? DIRECTORY_SEPARATOR.$path : $path)
         );
     }
@@ -93,9 +97,9 @@ class Jetstrap
      * @param string $path
      * @return string
      */
-    public static function stubsInertiaResources(string $path = ''): string
+    public static function jetstreamInertiaResources(string $path = ''): string
     {
-        return self::stubsPath(
+        return self::jetstreamPath(
             'inertia'
             .DIRECTORY_SEPARATOR
             .'resources'
@@ -108,9 +112,9 @@ class Jetstrap
      * @param string $path
      * @return string
      */
-    public static function stubsLivewire(string $path = ''): string
+    public static function jetstreamLivewire(string $path = ''): string
     {
-        return self::stubsPath(
+        return self::jetstreamPath(
             'livewire'
             .DIRECTORY_SEPARATOR
             .'resources'
@@ -124,13 +128,25 @@ class Jetstrap
      * @param string $path
      * @return string
      */
-    public static function stubsResourcesPath(string $path = ''): string
+    public static function jetstreamResourcesPath(string $path = ''): string
     {
-        return self::stubsPath(
+        return self::jetstreamPath(
             'resources'
             .($path ? DIRECTORY_SEPARATOR.$path : $path)
         );
 
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public static function jetstreamPath(string $path = ''): string
+    {
+        return self::stubsPath(
+            'jetstream'
+            .($path ? DIRECTORY_SEPARATOR.$path : $path)
+        );
     }
 
     public static function stubsPath(string $path = ''): string

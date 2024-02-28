@@ -88,7 +88,7 @@ abstract class AbstractHandler
         $this->replaceTailwindConfigFile();
         $this->prepareDirectories();
 
-        copy(Jetstrap::stubsResourcesPath(
+        copy(Jetstrap::jetstreamResourcesPath(
             Jetstrap::VIEWS_WELCOME_FILE),
             resource_path(Jetstrap::VIEWS_WELCOME_FILE));
 
@@ -139,7 +139,7 @@ abstract class AbstractHandler
         $this->getFile()->ensureDirectoryExists(resource_path('sass'));
         $this->getFile()->ensureDirectoryExists(resource_path('js'));
         $this->getFile()->ensureDirectoryExists(resource_path('views'));
-        $this->getFile()->copyDirectory(Jetstrap::stubsResourcesPath('js'), resource_path('js'));
-        $this->getFile()->copyDirectory(Jetstrap::stubsResourcesPath('sass'), resource_path('sass'));
+        $this->getFile()->copyDirectory(Jetstrap::jetstreamResourcesPath('js'), resource_path('js'));
+        $this->getFile()->copyDirectory(Jetstrap::jetstreamResourcesPath('sass'), resource_path('sass'));
     }
 }
