@@ -2,7 +2,10 @@
 
 namespace NascentAfrica\Jetstrap;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
+use NascentAfrica\Jetstrap\Console\SwapHandlers\BreezeHandler;
+use NascentAfrica\Jetstrap\Console\SwapHandlers\JetstreamHandler;
 
 class JetstrapServiceProvider extends ServiceProvider
 {
@@ -15,6 +18,14 @@ class JetstrapServiceProvider extends ServiceProvider
     {
         $this->app->bind('jetstrap', function () {
             return new Jetstrap;
+        });
+
+        $this->app->bind('jetstrap.jetstream.handler', function () {
+            return new JetstreamHandler(new Filesystem);
+        });
+
+        $this->app->bind('jetstrap.breeze.handler', function () {
+            return new BreezeHandler(new Filesystem);
         });
     }
 

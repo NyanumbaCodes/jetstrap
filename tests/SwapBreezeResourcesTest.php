@@ -5,6 +5,8 @@ namespace NascentAfrica\Jetstrap\Tests;
 
 
 use Illuminate\Filesystem\Filesystem;
+use NascentAfrica\Jetstrap\Console\SwapHandlers\BreezeHandler;
+use NascentAfrica\Jetstrap\Jetstrap;
 use NascentAfrica\Jetstrap\JetstrapFacade;
 
 class SwapBreezeResourcesTest extends TestCase
@@ -37,9 +39,10 @@ class SwapBreezeResourcesTest extends TestCase
     public function breeze_swapped()
     {
         // Run the make command
-        $this->artisan('jetstrap:swap breeze')
-            ->expectsOutput('Breeze scaffolding swapped successfully.')
-            ->expectsOutput('Please execute the "npm install && npm run dev" command to build your assets.')
+        $this->artisan('jetstrap:swap breeze --stack=livewire')
+            ->expectsOutput(BreezeHandler::getStartMessage())
+            ->expectsOutput(BreezeHandler::getFinishMessage())
+            ->expectsOutput(Jetstrap::RUN_NPM_MESSAGE)
             ->assertExitCode(0);
 
         $this->basicTests();
@@ -49,9 +52,10 @@ class SwapBreezeResourcesTest extends TestCase
     public function breeze_inertia_swapped()
     {
         // Run the make command
-        $this->artisan('jetstrap:swap breeze-inertia')
-            ->expectsOutput('Breeze scaffolding swapped successfully.')
-            ->expectsOutput('Please execute the "npm install && npm run dev" command to build your assets.')
+        $this->artisan('jetstrap:swap breeze --stack=inertia')
+            ->expectsOutput(BreezeHandler::getStartMessage())
+            ->expectsOutput(BreezeHandler::getFinishMessage())
+            ->expectsOutput(Jetstrap::RUN_NPM_MESSAGE)
             ->assertExitCode(0);
 
         $this->basicTests();

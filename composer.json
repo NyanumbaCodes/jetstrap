@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": "^7.3|^8.0",
+    "php": "^7.4|^8.0",
     "illuminate/support": "^8.0|^9.0"
   },
   "require-dev": {
@@ -29,10 +29,7 @@
   "autoload": {
     "psr-4": {
       "NascentAfrica\\Jetstrap\\": "src/Jetstrap/"
-    },
-    "files": [
-      "src/helpers.php"
-    ]
+    }
   },
   "autoload-dev": {
     "psr-4": {
