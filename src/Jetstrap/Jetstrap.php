@@ -35,8 +35,6 @@ class Jetstrap
 
     const RUN_NPM_MESSAGE = 'Please execute the "npm install && npm run dev" command to build your assets.';
 
-    const INVALID_HANDLER_MESSAGE = 'Unable to find a handler for the specified package.';
-
     /**
      * Update the "package.json" file.
      *
